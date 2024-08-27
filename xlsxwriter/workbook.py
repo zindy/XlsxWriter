@@ -166,6 +166,8 @@ class Workbook(xmlwriter.XMLwriter):
         self.default_theme_version: str = "124226"
         self.theme_xml: str = THEME_XML_2007
 
+        self.custom_uis = []
+
         # We can't do 'constant_memory' mode while doing 'in_memory' mode.
         if self.in_memory:
             self.constant_memory = False
@@ -462,6 +464,21 @@ class Workbook(xmlwriter.XMLwriter):
 
         self.theme_xml = theme_xml
         self.default_theme_version = ""
+
+    def add_custom_ui(self, custom_ui, version=2006) -> None:
+        """
+        Add a custom UI to the Excel workbook.
+
+        Args:
+            custom_ui:  The custom UI xml file name
+            verion:     Excel file version for the ribbon (2006 = pre-excel-2014, 2007 = excel 2014)
+        """
+
+        if not os.path.exists(custom_ui):
+            warn("Custom UI xml file '%s' not found." % custom_ui)
+            return -1
+
+        self.custom_uis.append((custom_ui, version))
 
     def close(self) -> None:
         """
