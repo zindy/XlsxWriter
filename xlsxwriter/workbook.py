@@ -12,6 +12,7 @@ import operator
 import os
 import re
 import time
+import warnings
 import zipfile
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -1612,11 +1613,13 @@ class Workbook(xmlwriter.XMLwriter):
                     continue
 
                 # Convert the range formula to a sheet name and cell range.
-                (sheetname, cells) = self._get_chart_range(c_range)
-
-                # Skip if we couldn't parse the formula.
-                if sheetname is None:
-                    continue
+                with warnings.catch_warnings():
+                    # Ignore warning for non-cell ranges like defined names.
+                    warnings.simplefilter("ignore")
+                    (sheetname, cells) = self._get_chart_range(c_range)
+                    # Skip if we couldn't parse the formula.
+                    if sheetname is None:
+                        continue
 
                 # Handle non-contiguous ranges like:
                 #     (Sheet1!$A$1:$A$2,Sheet1!$A$4:$A$5).
