@@ -36,7 +36,7 @@ The ``version`` parameter specifies the Office compatibility level:
 - ``version=2006``: Office 2007 compatibility
 - ``version=2007``: Office 2010+ compatibility
 
-For broad compatibility, both versions can be included to the same workbook:
+For broad compatibility, both versions can be included in the same workbook:
 
 .. code-block:: python
 
