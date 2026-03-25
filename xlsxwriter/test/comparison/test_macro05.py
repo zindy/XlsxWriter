@@ -27,8 +27,13 @@ class TestCompareXLSXFiles(ExcelComparisonTest):
         
         worksheet = workbook.add_worksheet()
         
-        workbook.add_custom_ui(self.vba_dir + "customUI-01.xml", version=2006)
-        workbook.add_custom_ui(self.vba_dir + "customUI14-01.xml", version=2007)
+        # Adding a Pre-2010 ribbon
+        # (XML namespace is http://schemas.microsoft.com/office/2006/01/customui)
+        workbook.add_custom_ui(self.vba_dir + "customUI-01.xml")
+
+        # Adding a Post-2010 ribbon
+        # (XML namespace is http://schemas.microsoft.com/office/2009/07/customui)
+        workbook.add_custom_ui(self.vba_dir + "customUI14-01.xml")
 
         workbook.add_signed_vba_project(
             self.vba_dir + "vbaProject06.bin",

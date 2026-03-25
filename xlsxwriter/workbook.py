@@ -465,17 +465,34 @@ class Workbook(xmlwriter.XMLwriter):
         self.theme_xml = theme_xml
         self.default_theme_version = ""
 
-    def add_custom_ui(self, custom_ui, version=2007) -> Literal[0, -1]:
+    def add_custom_ui(
+        self, custom_ui: Union[str, os.PathLike, IO[AnyStr]]
+    ) -> Literal[0, -1]:
         """
         Add a custom UI to the Excel workbook.
 
         Args:
             custom_ui:  The custom UI xml file name
-            version:     Excel file version for the ribbon (2006 = pre-excel-2014, 2007 = excel 2014)
-        """
 
+        Returns:
+            0 on success.
+
+        """
         if not os.path.exists(custom_ui):
             warn(f"Custom UI xml file '{custom_ui}' not found.")
+            return -1
+
+        # Retrieve the Excel version from the file's namespace:
+        # (2006 = pre-excel-2014, 2007 = excel 2014)
+        # namespace declaration is always in the root element
+        with open(custom_ui, "r", encoding="utf-8") as f:
+            content = f.read(256)
+        if "2006/01/customui" in content:
+            version = 2006
+        elif "2009/07/customui" in content:
+            version = 2007
+        else:
+            warn(f"Unrecognised or missing xmlns namespace in file '{custom_ui}'.")
             return -1
 
         self.custom_uis.append((custom_ui, version))
