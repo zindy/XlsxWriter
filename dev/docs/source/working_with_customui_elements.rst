@@ -29,19 +29,27 @@ Custom UI XML files are added to the workbook using the
 
 .. code-block:: python
 
-   workbook.add_custom_ui('./customUI.xml', version=2007)
+   workbook.add_custom_ui('./customUI.xml')
 
-The ``version`` parameter specifies the Office compatibility level:
+The Office compatibility version is automatically detected from the
+``xmlns`` namespace attribute in the XML file, so no additional
+parameters are required.
 
-- ``version=2006``: Office 2007 compatibility
-- ``version=2007``: Office 2010+ compatibility
-
-For broad compatibility, both versions can be included in the same workbook:
+For broad compatibility, both pre-2010 and 2010+ ribbon formats can be
+included in the same workbook:
 
 .. code-block:: python
 
-   workbook.add_custom_ui('./customUI-01.xml', version=2006)
-   workbook.add_custom_ui('./customUI14-01.xml', version=2007)
+   # Adding a Pre-2010 ribbon
+   # (XML namespace is http://schemas.microsoft.com/office/2006/01/customui)
+   workbook.add_custom_ui('./customUI-01.xml')
+
+   # Adding a Post-2010 ribbon
+   # (XML namespace is http://schemas.microsoft.com/office/2009/07/customui)
+   workbook.add_custom_ui('./customUI14-01.xml')
+
+If the file is not found, or the namespace is missing or unrecognised,
+a warning message is displayed and an error returned.
 
 
 Custom UI XML structure
